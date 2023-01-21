@@ -63,7 +63,7 @@ export class Bot {
 
     async postMessage(req, res) {
         let response = await this.getAnswer(req.body.Body);
-        console.log('here1', response);
+        console.log('here1', JSON.stringify(response));
 
         const twiml = new MessagingResponse();
 
