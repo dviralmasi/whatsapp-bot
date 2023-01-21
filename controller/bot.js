@@ -47,6 +47,7 @@ export class Bot {
                  * from the successful response collect the prompt_execution_id
                  * and then pass this to the result method
                  */
+                console.log('here', res);
                 if (res?.prompt_execution_id) {
                     return await mantiumAi
                         .Prompts('OpenAI')
@@ -62,6 +63,7 @@ export class Bot {
 
     async postMessage(req, res) {
         let response = await this.getAnswer(req.body.Body);
+        console.log('here1', response);
 
         const twiml = new MessagingResponse();
 
@@ -73,8 +75,10 @@ export class Bot {
          * read more...
          * https://www.twilio.com/docs/sms/tutorials/how-to-receive-and-reply-node-js
          */
+        const msg = twiml.toString();
+        console.log('here2', msg);
 
-        res.end(twiml.toString());
+        res.end(msg);
     }
 
     getMessage(req, res) {
