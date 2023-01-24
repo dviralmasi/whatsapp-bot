@@ -53,7 +53,7 @@ export class Bot {
                  */
                 console.log('here', res);
                 if (res?.prompt_execution_id) {
-                    await delay(5000);
+                    await this.delay(5000);
                     return await mantiumAi
                         .Prompts('OpenAI')
                         .result(res.prompt_execution_id)
