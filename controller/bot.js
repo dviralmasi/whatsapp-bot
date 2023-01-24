@@ -35,6 +35,10 @@ export class Bot {
             });
     }
 
+    async delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
     async getAnswer(question) {
         return await mantiumAi
             .Prompts('OpenAI')
@@ -49,6 +53,7 @@ export class Bot {
                  */
                 console.log('here', res);
                 if (res?.prompt_execution_id) {
+                    await delay(5000);
                     return await mantiumAi
                         .Prompts('OpenAI')
                         .result(res.prompt_execution_id)
