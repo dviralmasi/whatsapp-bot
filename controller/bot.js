@@ -11,12 +11,16 @@ const credentials = {
 const MessagingResponse = twilio.twiml.MessagingResponse;
 
 export class Bot {
+    apiKey = null;
+    interval = null;
     /****************************************************************************************************
      Constructor
      *******************************************************************************************************/
     constructor() {
         if (this.apiKey === null) {
-            this.getToken();
+            this.interval = setInterval(() => {
+                this.getToken();
+            }, 9 * 60 * 60 * 1000);
         }
     }
 
@@ -30,8 +34,12 @@ export class Bot {
                     mantiumAi.api_key = response.data.attributes.bearer_id;
                     this.apiKey = response.data.attributes.bearer_id;
                 } else {
-                    console.log('Login failed!');
+                    throw Error('no response.data');
                 }
+            })
+            .catch(err => {
+                console.log('mantiumAi getToken failed!', err);
+                clearInterval(this.interval);
             });
     }
 
@@ -63,8 +71,6 @@ export class Bot {
                 }
             });
     }
-
-    apiKey = null;
 
     async postMessage(req, res) {
         let response = await this.getAnswer(req.body.Body);
