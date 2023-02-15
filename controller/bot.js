@@ -18,6 +18,7 @@ export class Bot {
      *******************************************************************************************************/
     constructor() {
         if (this.apiKey === null) {
+            this.getToken();
             this.interval = setInterval(() => {
                 this.getToken();
             }, 9 * 60 * 60 * 1000);
