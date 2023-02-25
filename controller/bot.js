@@ -48,29 +48,41 @@ export class Bot {
         return new Promise(resolve => setTimeout(resolve, time));
     }
 
-    async getAnswer(question) {
+    async getPromptExecId(question) {
         return await mantiumAi
             .Prompts('OpenAI')
             .execute({
                 id: prompt_id,
                 input: question,
-            })
-            .then(async (res) => {
-                /*
-                 * from the successful response collect the prompt_execution_id
-                 * and then pass this to the result method
-                 */
-                console.log('here', res);
-                if (res?.prompt_execution_id) {
-                    await this.delay(5000);
-                    return await mantiumAi
-                        .Prompts('OpenAI')
-                        .result(res.prompt_execution_id)
-                        .then((response) => {
-                            return response;
-                        });
-                }
             });
+    }
+
+
+    async getAnswer(question) {
+        let counter = 0;
+        let res;
+        while (counter < 10) {
+            await this.delay(1000);
+            res = await this.getPromptExecId(question);
+            console.log(`getAnswer ${counter} res`, res);
+            if (res?.status === 'QUEUED') {
+                counter++;
+            } else {
+                break;
+            }
+        }
+        /*
+         * from the successful response collect the prompt_execution_id
+         * and then pass this to the result method
+         */
+        if (res?.prompt_execution_id) {
+            return await mantiumAi
+                .Prompts('OpenAI')
+                .result(res.prompt_execution_id)
+                .then((response) => {
+                    return response;
+                });
+        }
     }
 
     async postMessage(req, res) {
