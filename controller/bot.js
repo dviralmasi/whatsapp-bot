@@ -61,7 +61,7 @@ export class Bot {
     async getAnswer(question) {
         let counter = 0;
         let res;
-        while (counter < 10) {
+        while (counter < 20) {
             await this.delay(1000);
             res = await this.getPromptExecId(question);
             console.log(`getAnswer ${counter} res`, res);
